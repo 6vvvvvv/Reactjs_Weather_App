@@ -1,0 +1,43 @@
+.container {
+  width: 200px;
+  height: 250px;
+  border-radius: 20px;
+  border: solid;
+  padding: 15px;
+  margin: 150px auto auto;
+  color: aliceblue;
+}
+
+.contHead {
+  position: relative;
+  margin:auto;
+  text-align: center;
+}
+
+.contContent {
+  position: relative;
+  margin: 10px 10px;
+  text-align: center;
+}
+
+#bottombox {
+  height: 30%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  /* align-items: center; */
+}
+
+.bottomleft {
+  height: 100%;
+  text-align: center;
+
+}
+
+
+.bottomright {
+  height: 100%;
+  text-align: center;
+
+}
+

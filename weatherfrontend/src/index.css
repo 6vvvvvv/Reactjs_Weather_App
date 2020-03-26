@@ -1,0 +1,10 @@
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
+body {
+  font-family: "Poppins", sans-serif;
+  font-size: x-large;
+}
+
+html {
+  background: linear-gradient(to bottom, #000000 0%, #bfffca 100%) fixed;
+}
