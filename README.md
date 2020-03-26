@@ -5,11 +5,14 @@
  
 ![image](https://github.com/6vvvvvv/Reactjs_Weather_App/blob/master/images/weather%20app.jpg)
 
-## You can find the IP API I used here
+## IP API 
 https://ipapi.co/
 
-## You can find the weather API I used here
+## Weather API 
 https://openweathermap.org/
 
-## You can find the weather icons I used here
+## Weather icons 
 https://erikflowers.github.io/weather-icons/
+
+## Cors-Server
+https://cors-anywhere.herokuapp.com/
