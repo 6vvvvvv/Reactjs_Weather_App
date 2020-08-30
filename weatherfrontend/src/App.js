@@ -23,10 +23,10 @@ const App = () => {
     if (searchlocation.length !== 0) {
       Promise.all([
         fetch(
-          `http://api.openweathermap.org/data/2.5/forecast?q=${searchlocation}&appid=34e35ced0edac102f995450c1b6d4bae`
+          `https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/forecast?q=${searchlocation}&appid=34e35ced0edac102f995450c1b6d4bae`
         ).then((res) => res.json()),
         fetch(
-          `https://global-time.p.rapidapi.com/getglobaltime?locale=${searchlocation}`,
+          `https://cors-anywhere.herokuapp.com/https://global-time.p.rapidapi.com/getglobaltime?locale=${searchlocation}`,
           {
             method: "GET",
             headers: {
@@ -68,17 +68,17 @@ const App = () => {
         .then((data) => {
           Promise.all([
             fetch(
-              "http://api.openweathermap.org/data/2.5/weather?lat=" +
+              "https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/weather?lat=" +
                 data.latitude +
                 "&lon=" +
                 data.longitude +
                 "&APPID=34e35ced0edac102f995450c1b6d4bae"
             ).then((res) => res.json()),
             fetch(
-              `http://api.openweathermap.org/data/2.5/forecast?q=${data.city}&appid=34e35ced0edac102f995450c1b6d4bae`
+              `https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/forecast?q=${data.city}&appid=34e35ced0edac102f995450c1b6d4bae`
             ).then((res) => res.json()),
             fetch(
-              "https://global-time.p.rapidapi.com/getglobaltime?locale=Lyon",
+              "https://cors-anywhere.herokuapp.com/https://global-time.p.rapidapi.com/getglobaltime?locale=Lyon",
               {
                 method: "GET",
                 headers: {
