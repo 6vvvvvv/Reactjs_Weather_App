@@ -2,80 +2,126 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import { weathericon } from "./config/weathericon";
 import GithubCorner from "react-github-corner";
-import cities from "cities.json";
-
-// cities=[
-//   {
-//     "country": "FR",
-//     "name": "Lyon",
-//     "lat": "45.75",
-//     "lng": "4.583333"
-//   },
-//   ...
-// ]
-
-// <Tooltip title="Optional: Enter a two-letter country code after the city name to make the search more precise. For example, London, GB.">
-//                     <Search />
-//                   </Tooltip>
-//                 </InputAdornme
 
 const App = () => {
   const [location, setLocation] = useState("");
   const [countrycode, setCountrycode] = useState("");
-
-  // const [latitude, setLatitude] = useState(0);
-
-  // const [longitude, setLongitude] = useState(0);
-
-  // const [fahrenheit, setFahrenheit] = useState(0);
-
+  const [weatherdescription, setWeatherdescription] = useState("");
   const [celsius, setCelsius] = useState(0);
-
   const [humidity, setHumidity] = useState(0);
-
   const [windspeed, setWindspeed] = useState(0);
-
   const [weatherid, setWeatherid] = useState(0);
   const [inputvalue, setInputvalue] = useState("");
+  const [searchlocation, setSearchlocation] = useState("");
+  const [trend, setTrend] = useState();
+  const [trend3h, setTrend3h] = useState();
+  const [time, setTime] = useState("");
+  const [day, setDay] = useState("");
+  const [zone, setZone] = useState("");
+
+  useEffect(() => {
+    if (searchlocation.length !== 0) {
+      Promise.all([
+        fetch(
+          `http://api.openweathermap.org/data/2.5/forecast?q=${searchlocation}&appid=34e35ced0edac102f995450c1b6d4bae`
+        ).then((res) => res.json()),
+        fetch(
+          `https://global-time.p.rapidapi.com/getglobaltime?locale=${searchlocation}`,
+          {
+            method: "GET",
+            headers: {
+              "x-rapidapi-host": "global-time.p.rapidapi.com",
+              "x-rapidapi-key":
+                "36ff827798msh0b08408c4d3522cp14bfcejsn602beb5fc366",
+            },
+          }
+        ).then((res) => res.json()),
+      ])
+        .then((data) => {
+
+          const temp = data[0].city.name.split(" ");
+          if (temp[0] === "Arrondissement") {
+            setLocation(temp[2]);
+          } else {
+            setLocation(data[0].city.name);
+          }
+          
+
+          setCountrycode(data[0].city.country);
+          setCelsius((data[0].list[0].main.temp - 273.15).toFixed(1));
+          setHumidity(data[0].list[0].main.humidity.toFixed(1));
+          setWindspeed((data[0].list[0].wind.speed * 3.6).toFixed(1));
+          setWeatherid(data[0].list[0].weather[0].id);
+          setWeatherdescription(data[0].list[0].weather[0].description);
+          setTrend(data[0].list);
+          setTrend3h(data[0].list.slice(1, 6));
+          setDay(data[1].Weekday);
+          setTime(data[1].TimeStamp);
+          setZone(data[1].Zone);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      fetch("https://ipapi.co/json/")
+        .then((response) => response.json())
+        .then((data) => {
+          Promise.all([
+            fetch(
+              "http://api.openweathermap.org/data/2.5/weather?lat=" +
+                data.latitude +
+                "&lon=" +
+                data.longitude +
+                "&APPID=34e35ced0edac102f995450c1b6d4bae"
+            ).then((res) => res.json()),
+            fetch(
+              `http://api.openweathermap.org/data/2.5/forecast?q=${data.city}&appid=34e35ced0edac102f995450c1b6d4bae`
+            ).then((res) => res.json()),
+            fetch(
+              "https://global-time.p.rapidapi.com/getglobaltime?locale=Lyon",
+              {
+                method: "GET",
+                headers: {
+                  "x-rapidapi-host": "global-time.p.rapidapi.com",
+                  "x-rapidapi-key":
+                    "36ff827798msh0b08408c4d3522cp14bfcejsn602beb5fc366",
+                },
+              }
+            ).then((res) => res.json()),
+          ]).then((data1) => {
+            const temp = data.city.split(" ");
+            if (temp[0] === "Arrondissement") {
+              setLocation(temp[2]);
+            } else {
+              setLocation(data.city);
+            }
+
+            setLocation(data.city);
+            setCountrycode(data.country_code);
+            setCelsius((data1[0].main.temp - 273.15).toFixed(1));
+            setHumidity(data1[0].main.humidity.toFixed(1));
+            setWindspeed((data1[0].wind.speed * 3.6).toFixed(1));
+            setWeatherid(data1[0].weather[0].id);
+            setWeatherdescription(data1[0].weather[0].description);
+            setTrend(data1[1].list);
+            setTrend3h(data1[1].list.slice(1, 6));
+            setTime(data1[2].TimeStamp);
+            setDay(data1[2].Weekday);
+            setZone(data1[2].Zone);
+          });
+        });
+    }
+  }, [searchlocation]);
 
   const inputsearch = (e) => {
     setInputvalue(e.target.value);
   };
 
-  useEffect(() => {
-    try {
-      fetch("https://ipapi.co/json/")
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-
-          fetch(
-            "https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/weather?lat=" +
-              data.latitude +
-              "&lon=" +
-              data.longitude +
-              "&APPID=34e35ced0edac102f995450c1b6d4bae"
-          )
-            .then((response1) => response1.json())
-            .then((data1) => {
-              console.log(data1);
-              console.log(data1.weather[0].id);
-
-              setLocation(data.city);
-              setCountrycode(data.country_code);
-              // setLatitude(data.latitude);
-              // setLongitude(data.longitude);
-              // setFahrenheit(((data1.main.temp - 273.15) * 1.8 + 32).toFixed(1));
-              setCelsius((data1.main.temp - 273.15).toFixed(1));
-              setHumidity(data1.main.humidity.toFixed(1));
-              setWindspeed((data1.wind.speed * 3.6).toFixed(1));
-              setWeatherid(data1.weather[0].id);
-            });
-        });
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
+  const inputsubmit = (e) => {
+    // e.preventDefault();
+    console.log("one click");
+    setSearchlocation(inputvalue);
+  };
 
   const weather = (wid) => {
     if (wid === weathericon.clearIcons) {
@@ -131,40 +177,39 @@ const App = () => {
             onChange={inputsearch}
           />
           <a className="btn-floating btn-medium pulse floating-pulse">
-            <i className="material-icons">cloud</i>
+            <i className="material-icons" onClick={inputsubmit}>
+              cloud
+            </i>
           </a>
         </div>
 
         <div className="col s12">
-          <div className="place col s6">
+          <div className="place col s3 ">
             <p>
               {location} , {countrycode}
             </p>
             <p>
-              <i className="wi wi-thermometer"></i> {celsius}{" "}
-              <i className="wi wi-celsius"></i>
+              {day},{time},{zone}
             </p>
-          </div>
-          <div className="weathericon col s6">{weather(weatherid)}</div>
-        </div>
-        {/* 
-        <div className="contContent">
-          <div>
             <p>
               <i className="wi wi-thermometer"></i> {celsius}{" "}
               <i className="wi wi-celsius"></i>
             </p>
           </div>
-        </div> */}
+          <div className="weathersituation ">
+            <span className="weathericon">{weather(weatherid)}</span>
+            <span className="weatherdescription">{weatherdescription}</span>
+          </div>
+        </div>
 
-        <div className="row">
-          <div className="col s1">
+        <div className="row humidity-wind">
+          <div className="col s1 humidity small">
             <span>
               <i className="wi wi-humidity"></i>
               <p>{humidity}%</p>
             </span>
           </div>
-          <div className="col s1 offset-s2">
+          <div className="col s1 offset-s2 wind small">
             <span>
               <i className="wi wi-strong-wind"></i>
               <p>{windspeed}km/h</p>
@@ -173,43 +218,48 @@ const App = () => {
         </div>
 
         {/* <hr></hr> */}
-        <div class="card">
-          <div class="card-tabs  ">
-            <ul class="tabs tabs-fixed-width ">
-              <li class="tab">
-                <a class="active" href="#n4d">
-                  Next 4 Days
+        <div className="card">
+          <div className="card-tabs">
+            <ul className="tabs tabs-fixed-width ">
+              <li className="tab">
+                <a className="active" href="#n3h">
+                  Next 3 hours
                 </a>
               </li>
-              <li class="tab">
+              {/* <li className="tab">
                 <a href="#trend">Trend Curve</a>
-              </li>
+              </li> */}
             </ul>
           </div>
-          <div class="card-content teal lighten-3">
-            <div id="n4d">
-              <div>
-                <div className="row">
-                  <p>Stuff</p>
-                </div>
-                <div className="row">
-                  <p>Stuff</p>
-                </div>
-                <div className="row">
-                  <p>Stuff</p>
-                </div>
-                <div className="row">
-                  <p>Stuff</p>
-                </div>
-              </div>
-              <div id="trend"></div>
+          <div className="card-content teal lighten-3">
+            <div id="n3h">
+              {trend3h &&
+                trend3h.map((item, id) => (
+                  <div className="row" key={id}>
+                    <span className="time  left">{item.dt_txt}</span>
+                    <span className="time-weather-icon">
+                      {weather(item.weather[0].id)}
+                      <span className="time-weather-main">
+                        {item.weather[0].main}
+                      </span>
+                    </span>
+                    <span className="feel-like">
+                      <span className="min-temp">
+                        {(item.main.feels_like - 273.15).toFixed(1)}
+                      </span>
+                      <i className="wi wi-celsius wi-temp"></i>
+                    </span>
+                  </div>
+                ))}
+
+              {/* <div id="trend">asdasdsfdsgs</div> */}
             </div>
           </div>
         </div>
         <div className="footer-copyright footer ">
           © 2020 Copyright
           <span className="right">
-            <i class="fab fa-github"></i>
+            <i className="fab fa-github"></i>
             <a
               className="white-text text-lighten-1 github "
               href="https://github.com/6vvvvvv/Reactjs_Weather_App"

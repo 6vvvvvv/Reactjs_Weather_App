@@ -1,6 +1,6 @@
 .container {
   width: 450px;
-  height: 710px;
+  height: 720px;
   border-radius: 20px;
   border: solid;
   border-color: white;
@@ -16,14 +16,32 @@
 }
 
 p + p {
+  /* position: absolute; */
+  text-align: left;
+  font-size: 10px;
+}
+p + p + p {
   text-align: left;
   font-size: 40px;
 }
 
-.weathericon {
+.weathersituation {
+  position: absolute;
   display: inline-block;
+}
+
+.weathericon {
+  position: relative;
   font-size: 125px;
-  margin-left: 85px;
+  padding-top: 45px;
+  padding-left: 50px;
+}
+
+.weatherdescription {
+  position: relative;
+  font-size: 15px;
+  padding-left: 70px;
+  margin-top: 30px;
 }
 
 div > span {
@@ -61,15 +79,42 @@ i + p {
 
 .floating-pulse {
   position: absolute;
-  display:inline-block;
+  display: inline-block;
   margin-left: 10px;
-  margin-top:5px
+  margin-top: 5px;
 }
 
-.footer{
-  font-size:15px;
+.footer {
+  font-size: 15px;
+  margin-top: 25px;
 }
 
-.github{
+.github {
   margin-left: 4px;
+}
+
+.time-weather-icon {
+  position: absolute;
+  margin-left: 150px;
+}
+
+.time-weather-main {
+  position: relative;
+  margin-left: 5px;
+}
+
+.wi-temp {
+  position: absolute;
+  font-size: 20px;
+  margin-left: 2px;
+  text-align: left;
+}
+
+.feel-like {
+  position: absolute;
+  margin-left: 320px;
+}
+
+.humidity-wind {
+  margin-bottom: 0px;
 }
