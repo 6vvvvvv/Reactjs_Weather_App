@@ -7,4 +7,5 @@ body {
 
 html {
   background: linear-gradient(to bottom, #000000 0%, #bfffca 100%) fixed;
-}
+  color:white;
+} 

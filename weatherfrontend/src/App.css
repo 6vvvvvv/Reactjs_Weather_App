@@ -1,43 +1,75 @@
 .container {
-  width: 200px;
-  height: 250px;
+  width: 450px;
+  height: 710px;
   border-radius: 20px;
   border: solid;
+  border-color: white;
   padding: 15px;
-  margin: 150px auto auto;
-  color: aliceblue;
+  margin: 100px auto auto;
 }
 
-.contHead {
-  position: relative;
-  margin:auto;
-  text-align: center;
+.place {
+  display: inline-block;
+  text-align: left;
+  font-size: 20px;
+  padding-left: 8px;
 }
 
-.contContent {
-  position: relative;
-  margin: 10px 10px;
-  text-align: center;
+p + p {
+  text-align: left;
+  font-size: 40px;
 }
 
-#bottombox {
-  height: 30%;
+.weathericon {
+  display: inline-block;
+  font-size: 125px;
+  margin-left: 85px;
+}
+
+div > span {
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  /* align-items: center; */
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
 }
 
-.bottomleft {
-  height: 100%;
+span > i {
+  padding-left: 45px;
+}
+
+i + p {
+  margin-left: 10px;
+}
+
+.searchbar {
+  width: 88%;
+}
+
+.searchinput {
+  color: white;
+  width: 88%;
   text-align: center;
-
+  text-size-adjust: 30px;
+  font-family: "Poppins";
+}
+.searchicon {
+  position: absolute;
+  font-size: 25px;
+  padding-top: 5px;
+  padding-left: 5px;
 }
 
-
-.bottomright {
-  height: 100%;
-  text-align: center;
-
+.floating-pulse {
+  position: absolute;
+  display:inline-block;
+  margin-left: 10px;
+  margin-top:5px
 }
 
+.footer{
+  font-size:15px;
+}
+
+.github{
+  margin-left: 4px;
+}
