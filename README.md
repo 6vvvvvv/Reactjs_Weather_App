@@ -7,7 +7,7 @@ https://weather-lw-2418c.firebaseapp.com/
 1.By Default Loading With Respect With Your IP.
 ![image](https://github.com/6vvvvvv/Reactjs_Weather_App/blob/master/img/1.jpg)
 
-1.Searching With Respect With Your Input.
+2.Searching With Respect With Your Input.
 ![image](https://github.com/6vvvvvv/Reactjs_Weather_App/blob/master/img/2.jpg)
 
 ## RAPID API
