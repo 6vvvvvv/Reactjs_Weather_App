@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import { weathericon } from "./config/weathericon";
 import GithubCorner from "react-github-corner";
+import { Line } from "react-chartjs-2";
 
 const App = () => {
   const [location, setLocation] = useState("");
@@ -18,8 +19,10 @@ const App = () => {
   const [time, setTime] = useState("");
   const [day, setDay] = useState("");
   const [zone, setZone] = useState("");
+  const [showTrendActive, setShowTrendActive] = useState(false);
 
   useEffect(() => {
+    // when you search input field is not equal to 0 else show local ip weather
     if (searchlocation.length !== 0) {
       Promise.all([
         fetch(
@@ -38,14 +41,12 @@ const App = () => {
         ).then((res) => res.json()),
       ])
         .then((data) => {
-
           const temp = data[0].city.name.split(" ");
           if (temp[0] === "Arrondissement") {
             setLocation(temp[2]);
           } else {
             setLocation(data[0].city.name);
           }
-          
 
           setCountrycode(data[0].city.country);
           setCelsius((data[0].list[0].main.temp - 273.15).toFixed(1));
@@ -53,7 +54,7 @@ const App = () => {
           setWindspeed((data[0].list[0].wind.speed * 3.6).toFixed(1));
           setWeatherid(data[0].list[0].weather[0].id);
           setWeatherdescription(data[0].list[0].weather[0].description);
-          setTrend(data[0].list);
+          setTrend(data[0].list.slice(1, 9));
           setTrend3h(data[0].list.slice(1, 6));
           setDay(data[1].Weekday);
           setTime(data[1].TimeStamp);
@@ -103,7 +104,7 @@ const App = () => {
             setWindspeed((data1[0].wind.speed * 3.6).toFixed(1));
             setWeatherid(data1[0].weather[0].id);
             setWeatherdescription(data1[0].weather[0].description);
-            setTrend(data1[1].list);
+            setTrend(data1[1].list.slice(1, 9));
             setTrend3h(data1[1].list.slice(1, 6));
             setTime(data1[2].TimeStamp);
             setDay(data1[2].Weekday);
@@ -113,6 +114,10 @@ const App = () => {
     }
   }, [searchlocation]);
 
+  useEffect(() => {
+    console.log("trend", trend);
+  }, [trend]);
+
   const inputsearch = (e) => {
     setInputvalue(e.target.value);
   };
@@ -121,6 +126,28 @@ const App = () => {
     // e.preventDefault();
     console.log("one click");
     setSearchlocation(inputvalue);
+  };
+
+  const showtrend = () => {
+    setShowTrendActive(!showTrendActive);
+    console.log("showACTIVE", showTrendActive);
+  };
+
+  const trenddata =
+    trend && trend.map((item) => (item.main.feels_like - 273.15).toFixed(1));
+
+  const state = {
+    labels: ["+3", "+6", "+9", "+12", "+15", "+18", "+21", "+24"],
+    datasets: [
+      {
+        label: "feels_like",
+        fill: false,
+        lineTension: 0.5,
+        borderColor: "rgba(0,0,0,1)",
+        borderWidth: 2,
+        data: trenddata,
+      },
+    ],
   };
 
   const weather = (wid) => {
@@ -217,23 +244,36 @@ const App = () => {
           </div>
         </div>
 
-        {/* <hr></hr> */}
         <div className="card">
           <div className="card-tabs">
             <ul className="tabs tabs-fixed-width ">
               <li className="tab">
-                <a className="active" href="#n3h">
+                <a className="active" href="#n3h" onClick={showtrend}>
                   Next 3 hours
                 </a>
               </li>
-              {/* <li className="tab">
-                <a href="#trend">Trend Curve</a>
-              </li> */}
+              <li className="tab">
+                <a href="#trend" onClick={showtrend}>
+                  Trend Curve
+                </a>
+              </li>
             </ul>
           </div>
           <div className="card-content teal lighten-3">
             <div id="n3h">
-              {trend3h &&
+              {showTrendActive ? (
+                <Line
+                  data={state}
+                  options={{
+                    title: {
+                      display: true,
+                      text: "Temperature Next 3 Hours",
+                      fontSize: 15,
+                    },
+                  }}
+                />
+              ) : (
+                trend3h &&
                 trend3h.map((item, id) => (
                   <div className="row" key={id}>
                     <span className="time  left">{item.dt_txt}</span>
@@ -250,9 +290,8 @@ const App = () => {
                       <i className="wi wi-celsius wi-temp"></i>
                     </span>
                   </div>
-                ))}
-
-              {/* <div id="trend">asdasdsfdsgs</div> */}
+                ))
+              )}
             </div>
           </div>
         </div>
@@ -268,6 +307,7 @@ const App = () => {
             </a>
           </span>
         </div>
+
         <GithubCorner
           href="https://github.com/6vvvvvv/Reactjs_Weather_App"
           bannerColor="#bfdcae"
